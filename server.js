@@ -107,6 +107,8 @@ app.post('/api/search', async (req, res) => {
     console.error('Search API Error:', error);
     res.status(500).json({ error: 'Failed to perform search. Please try again later.' });
   }
+});
+
 app.post('/api/generate-ppt', async (req, res) => {
   const { prompt } = req.body;
   const CANVA_ACCESS_TOKEN = process.env.CANVA_ACCESS_TOKEN;

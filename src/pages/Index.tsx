@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Sparkles, LogOut, Loader2, Search, Bot, Code, LineChart, MessageSquare, Menu, PanelLeftClose, Image as ImageIcon, Download, Layout } from "lucide-react";
+import { Sparkles, LogOut, Loader2, Search, Bot, Code, LineChart, MessageSquare, Menu, PanelLeftClose, Image as ImageIcon, Download, Layout, Home } from "lucide-react";
 import { toast } from "sonner";
 
 const AI_AGENTS = [
+  { id: 5, name: "HomePage", icon: Home },
   { id: 1, name: "Code Assistant", icon: Code },
   { id: 2, name: "Design Agent", icon: Sparkles },
   { id: 3, name: "Slide Architect", icon: Layout },
   { id: 4, name: "Data Analyzer", icon: LineChart },
-  { id: 5, name: "Support Bot", icon: MessageSquare },
 ];
 
 const Index = () => {
@@ -19,7 +19,7 @@ const Index = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeAgent, setActiveAgent] = useState<number | null>(null);
+  const [activeAgent, setActiveAgent] = useState<number | null>(5);
 
   // Search State
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,12 +48,12 @@ const Index = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
-      if (!s) navigate("/auth", { replace: true });
+      // if (!s) navigate("/auth", { replace: true });
     });
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setReady(true);
-      if (!session) navigate("/auth", { replace: true });
+      // if (!session) navigate("/auth", { replace: true });
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -185,7 +185,7 @@ const Index = () => {
     }
   };
 
-  if (!ready || !session) {
+  if (!ready) {
     return (
       <div className="grid min-h-screen place-items-center bg-hero">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -205,7 +205,7 @@ const Index = () => {
       >
         <div className="flex w-72 flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <button onClick={() => setActiveAgent(null)} className="flex items-center gap-3 text-left">
+            <button onClick={() => setActiveAgent(5)} className="flex items-center gap-3 text-left">
               <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-primary shadow-glow shrink-0">
                 <Sparkles className="h-4 w-4 text-primary-foreground" />
               </div>
@@ -476,7 +476,7 @@ const Index = () => {
               <span className="h-1.5 w-1.5 rounded-full bg-primary" /> You're signed in
             </span>
             <h1 className="mt-6 text-5xl font-semibold tracking-tight">
-              Welcome, <span className="bg-gradient-primary bg-clip-text text-transparent">{session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split("@")[0]}</span>
+              Welcome, <span className="bg-gradient-primary bg-clip-text text-transparent">{session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || session?.user?.email?.split("@")[0] || "Guest"}</span>
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
               Your workspace is ready. Start building something beautiful.

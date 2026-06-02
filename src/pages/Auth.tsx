@@ -147,6 +147,15 @@ const Auth = () => {
                 Continue with Google
               </Button>
 
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate("/")}
+                className="mt-3 h-11 w-full rounded-xl font-medium transition-smooth hover:shadow-soft"
+              >
+                Continue as Guest
+              </Button>
+
               <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-border" />
                 <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
